@@ -1,0 +1,159 @@
+:root {
+    --prod-shell-radius: 28px;
+    --prod-card-radius: 24px;
+    --prod-space: clamp(14px, 3.6vw, 22px);
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+body {
+    padding: clamp(8px, 1.8vw, 16px);
+}
+
+.app-container {
+    width: min(100%, 460px);
+    max-width: 460px;
+    height: min(940px, calc(100dvh - 16px));
+    min-height: 620px;
+    margin: auto;
+    border-radius: var(--prod-shell-radius);
+    clip-path: none;
+    overflow: hidden;
+}
+
+.screen {
+    padding: var(--prod-space);
+}
+
+.screen.active {
+    animation: screenFade 220ms ease;
+}
+
+.card,
+.prediction-card,
+.insight-card,
+.settings-section,
+.chart-container,
+.onboarding-step.active {
+    border-radius: var(--prod-card-radius);
+}
+
+.onboarding-screen {
+    padding: var(--prod-space);
+    align-items: center;
+    justify-content: center;
+}
+
+.onboarding-container {
+    width: 100%;
+    max-width: 420px;
+}
+
+.onboarding-step.active {
+    background: var(--card-bg);
+    box-shadow: 0 14px 36px var(--shadow-color);
+    padding: clamp(24px, 4.8vh, 34px) clamp(18px, 4.8vw, 28px);
+}
+
+.onboarding-step .button-row {
+    width: 100%;
+    margin-top: clamp(12px, 2.8vh, 20px);
+}
+
+.onboarding-step .button-row .onboarding-back-btn,
+.onboarding-step .button-row .primary-btn {
+    min-height: 46px;
+}
+
+.chat-container {
+    min-height: clamp(180px, 30vh, 280px);
+    max-height: clamp(240px, 36vh, 360px);
+}
+
+.chat-input-area {
+    align-items: center;
+}
+
+#send-btn.loading {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+#send-btn.loading i {
+    animation: spin 900ms linear infinite;
+}
+
+.toast {
+    border-radius: 14px;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 0;
+    }
+
+    .app-container {
+        width: calc(100% - 12px);
+        max-width: 500px;
+        min-height: calc(100dvh - 12px);
+        height: calc(100dvh - 12px);
+        margin: 6px auto;
+        border-radius: 24px;
+    }
+
+    .screen {
+        padding: clamp(12px, 4vw, 18px);
+    }
+
+    .onboarding-screen {
+        padding: clamp(10px, 3.8vw, 16px);
+    }
+
+    .onboarding-step.active {
+        border-radius: 20px;
+        padding: clamp(18px, 4.2vh, 28px) clamp(14px, 4.2vw, 22px);
+    }
+
+    .onboarding-dots {
+        margin-top: 14px;
+        padding: 8px 12px 12px;
+    }
+}
+
+@media (max-width: 420px) {
+    .app-container {
+        width: calc(100% - 8px);
+        min-height: calc(100dvh - 8px);
+        height: calc(100dvh - 8px);
+        margin: 4px auto;
+        border-radius: 18px;
+    }
+
+    .onboarding-step .button-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@keyframes screenFade {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

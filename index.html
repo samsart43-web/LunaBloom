@@ -1,0 +1,813 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="LunaBloom is a cycle tracking and wellness companion for logging symptoms, understanding phases, and getting practical insights.">
+    <meta name="theme-color" content="#9b59b6">
+    <title>LunaBloom - Premium Period Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="production.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%239b59b6'/%3E%3Ctext x='50' y='64' text-anchor='middle' font-size='52' fill='white' font-family='Arial'%3EL%3C/text%3E%3C/svg%3E">
+</head>
+
+<body data-theme="pink">
+    <div class="app-container">
+
+        <!-- ONBOARDING SCREEN -->
+        <div id="onboarding-screen" class="screen onboarding-screen active">
+            <div class="onboarding-container">
+                <!-- Step 1: Welcome -->
+                <div class="onboarding-step active" data-step="1">
+                    <div class="illustration">
+                        <div class="illustration-glow"></div>
+                        <i class="fa-solid fa-moon illustration-icon"></i>
+                    </div>
+                    <h2 data-i18n="onboarding_welcome_title">Welcome to LunaBloom</h2>
+                    <p data-i18n="onboarding_welcome_desc">Your personal wellness companion for cycle tracking and
+                        health insights.</p>
+                    <button class="primary-btn" onclick="nextOnboardingStep()"
+                        data-i18n="btn_continue">Continue</button>
+                </div>
+
+                <!-- Step 2: Cycle Length -->
+                <div class="onboarding-step" data-step="2">
+                    <div class="illustration">
+                        <div class="illustration-glow"></div>
+                        <i class="fa-solid fa-heart-pulse illustration-icon"></i>
+                    </div>
+                    <h2 data-i18n="onboarding_cycle_title">What's your cycle length?</h2>
+                    <p data-i18n="onboarding_cycle_desc">Most cycles are usually 21-35 days, but you can set 20-40.</p>
+                    <div class="slider-container">
+                        <div class="slider-value"><span id="cycle-slider-value">28</span> <span
+                                data-i18n="days">days</span></div>
+                        <input type="range" class="slider" id="onboarding-cycle-slider" min="20" max="40" value="28"
+                            oninput="updateCycleSlider(this.value)">
+                        <div class="slider-labels">
+                            <span>20</span>
+                            <span>40</span>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button class="secondary-btn onboarding-back-btn" onclick="prevOnboardingStep()" data-i18n="btn_back">Back</button>
+                        <button class="primary-btn" onclick="nextOnboardingStep()"
+                            data-i18n="btn_continue">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Period Length -->
+                <div class="onboarding-step" data-step="3">
+                    <div class="illustration">
+                        <div class="illustration-glow"></div>
+                        <i class="fa-solid fa-droplet illustration-icon"></i>
+                    </div>
+                    <h2 data-i18n="onboarding_period_title">How long is your period?</h2>
+                    <p data-i18n="onboarding_period_desc">This helps us predict your cycle accurately.</p>
+                    <div class="slider-container">
+                        <div class="slider-value"><span id="period-slider-value">5</span> <span
+                                data-i18n="days">days</span></div>
+                        <input type="range" class="slider" id="onboarding-period-slider" min="2" max="10" value="5"
+                            oninput="updatePeriodSlider(this.value)">
+                        <div class="slider-labels">
+                            <span>2</span>
+                            <span>10</span>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button class="secondary-btn onboarding-back-btn" onclick="prevOnboardingStep()" data-i18n="btn_back">Back</button>
+                        <button class="primary-btn" onclick="nextOnboardingStep()"
+                            data-i18n="btn_continue">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Last Period Date -->
+                <div class="onboarding-step" data-step="4">
+                    <div class="illustration">
+                        <div class="illustration-glow"></div>
+                        <i class="fa-solid fa-calendar-check illustration-icon"></i>
+                    </div>
+                    <h2 data-i18n="onboarding_date_title">When did your last period start?</h2>
+                    <p data-i18n="onboarding_date_desc">Enter the date to start tracking your cycle.</p>
+                    <div class="date-picker-container">
+                        <input type="date" class="calendar-input" id="onboarding-date" required>
+                    </div>
+                    <div class="button-row">
+                        <button class="secondary-btn onboarding-back-btn" onclick="prevOnboardingStep()" data-i18n="btn_back">Back</button>
+                        <button class="primary-btn" onclick="nextOnboardingStep()"
+                            data-i18n="btn_continue">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 5: Symptom Preferences -->
+                <div class="onboarding-step" data-step="5">
+                    <div class="illustration">
+                        <div class="illustration-glow"></div>
+                        <i class="fa-solid fa-stethoscope illustration-icon"></i>
+                    </div>
+                    <h2 data-i18n="onboarding_symptom_title">Pick what you want to track</h2>
+                    <p data-i18n="onboarding_symptom_desc">Choose the signals you care about most.</p>
+                    <div class="chip-grid" id="preference-chips">
+                        <div class="chip" data-pref="cramps">Cramps</div>
+                        <div class="chip" data-pref="mood_swings">Mood swings</div>
+                        <div class="chip" data-pref="headache">Headaches</div>
+                        <div class="chip" data-pref="cravings">Cravings</div>
+                        <div class="chip" data-pref="energy">Energy</div>
+                        <div class="chip" data-pref="sleep">Sleep</div>
+                    </div>
+                    <div class="button-row">
+                        <button class="secondary-btn onboarding-back-btn" onclick="prevOnboardingStep()" data-i18n="btn_back">Back</button>
+                        <button class="primary-btn" onclick="nextOnboardingStep()"
+                            data-i18n="btn_continue">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 6: Name & Notifications -->
+                <div class="onboarding-step" data-step="6">
+                    <div class="illustration">
+                        <div class="illustration-glow"></div>
+                        <i class="fa-solid fa-bell illustration-icon"></i>
+                    </div>
+                    <h2 data-i18n="onboarding_notify_title">Stay informed</h2>
+                    <p data-i18n="onboarding_notify_desc">Get notifications for upcoming periods and ovulation.</p>
+                    <div class="input-group">
+                        <label data-i18n="your_name">Your Name</label>
+                        <input type="text" id="user-name" placeholder="Enter your name" required minlength="2"
+                            maxlength="50" autocomplete="name"
+                            data-i18n-placeholder="placeholder_name">
+                    </div>
+                    <div class="button-row">
+                        <button class="secondary-btn onboarding-back-btn" onclick="prevOnboardingStep()" data-i18n="btn_back">Back</button>
+                        <button class="primary-btn" onclick="completeOnboarding()" data-i18n="btn_all_set">All
+                            Set!</button>
+                    </div>
+                </div>
+
+                <div class="onboarding-dots">
+                    <div class="onboarding-dot active" data-dot="1"></div>
+                    <div class="onboarding-dot" data-dot="2"></div>
+                    <div class="onboarding-dot" data-dot="3"></div>
+                    <div class="onboarding-dot" data-dot="4"></div>
+                    <div class="onboarding-dot" data-dot="5"></div>
+                    <div class="onboarding-dot" data-dot="6"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD SCREEN -->
+        <div id="dashboard-screen" class="screen">
+            <header class="dashboard-header">
+                <div class="logo-section">
+                    <div class="logo-icon-small animate-float">
+                        <i class="fa-solid fa-moon"></i>
+                    </div>
+                    <h2 id="dashboard-greeting">Hello, <span id="user-name-display">User</span>!</h2>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" id="settings-btn" onclick="switchScreen('settings-screen')">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="cute-gear">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path
+                                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="scroll-content">
+                <!-- Progress Ring -->
+                <div class="progress-section">
+                    <div class="progress-ring-container">
+                        <svg class="progress-ring-svg" viewBox="0 0 220 220">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:var(--primary)" />
+                                    <stop offset="100%" style="stop-color:var(--primary-light)" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="progress-ring-bg" cx="110" cy="110" r="100" />
+                            <circle class="progress-ring-progress" cx="110" cy="110" r="100" stroke-dasharray="628.32"
+                                stroke-dashoffset="0" id="ring-progress" />
+                        </svg>
+                        <div class="ring-decoration"></div>
+                        <div class="ring-content">
+                            <span class="ring-label" data-i18n="days_until">Days Until</span>
+                            <span class="ring-days" id="days-countdown">--</span>
+                            <span class="ring-sublabel" id="cycle-day-text">Day <span
+                                    id="current-cycle-day">--</span></span>
+                        </div>
+                        <div class="ring-phase-badge" id="phase-badge">Phase</div>
+                    </div>
+                </div>
+
+                <!-- Quick Period Actions -->
+                <div class="pill-actions">
+                    <button class="pill-btn primary" onclick="markPeriodStartToday()" data-i18n="btn_mark_start">Mark
+                        period start today</button>
+                    <button class="pill-btn ghost" onclick="markPeriodEndToday()" data-i18n="btn_mark_end">Mark period
+                        end</button>
+                </div>
+
+                <!-- Predictions -->
+                <div class="predictions-grid">
+                    <div class="prediction-card">
+                        <div class="pred-icon period">
+                            <i class="fa-solid fa-droplet"></i>
+                        </div>
+                        <div class="pred-info">
+                            <h4 data-i18n="next_period">Next Period</h4>
+                            <p id="next-period-date">--</p>
+                        </div>
+                    </div>
+                    <div class="prediction-card">
+                        <div class="pred-icon ovulation">
+                            <i class="fa-solid fa-egg"></i>
+                        </div>
+                        <div class="pred-info">
+                            <h4 data-i18n="ovulation">Ovulation</h4>
+                            <p id="ovulation-date">--</p>
+                        </div>
+                    </div>
+                    <div class="prediction-card">
+                        <div class="pred-icon fertile">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="pred-info">
+                            <h4 data-i18n="fertile_window">Fertile Window</h4>
+                            <p id="fertile-window">--</p>
+                        </div>
+                    </div>
+                    <div class="prediction-card">
+                        <div class="pred-icon period">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div class="pred-info">
+                            <h4 data-i18n="cycle_length">Cycle Length</h4>
+                            <p id="cycle-length-display">28 days</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Insight -->
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <i class="fa-solid fa-sparkles insight-icon"></i>
+                        <span class="insight-title" data-i18n="todays_insight">Today's Insight</span>
+                    </div>
+                    <div class="phase-badge" id="insight-phase-badge">Phase</div>
+                    <p class="insight-tip" id="phase-tip">Loading your personalized insight...</p>
+                </div>
+
+                <!-- Quick Log -->
+                <div class="quick-log-section">
+                    <div class="section-header">
+                        <h3 class="section-title" data-i18n="log_symptoms">Log Today</h3>
+                        <span class="see-all" onclick="switchScreen('tracking-screen')" data-i18n="see_all">See
+                            All</span>
+                    </div>
+                    <div class="symptom-grid">
+                        <div class="sym-btn" data-symptom="mood" onclick="openMoodModal()">
+                            <i class="fa-solid fa-face-smile"></i>
+                            <span data-i18n="sym_mood">Mood</span>
+                        </div>
+                        <div class="sym-btn" data-symptom="flow" onclick="openFlowModal()">
+                            <i class="fa-solid fa-droplet"></i>
+                            <span data-i18n="sym_flow">Flow</span>
+                        </div>
+                        <div class="sym-btn" data-symptom="energy" onclick="openEnergyModal()">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span data-i18n="sym_energy">Energy</span>
+                        </div>
+                        <div class="sym-btn" data-symptom="sleep" onclick="openSleepModal()">
+                            <i class="fa-solid fa-moon"></i>
+                            <span data-i18n="sym_sleep">Sleep</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <nav class="bottom-nav">
+                <div class="nav-item active" data-target="dashboard-screen">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-i18n="nav_home">Home</span>
+                </div>
+                <div class="nav-item" data-target="calendar-screen">
+                    <i class="fa-solid fa-calendar"></i>
+                    <span data-i18n="nav_calendar">Calendar</span>
+                </div>
+                <div class="nav-item" data-target="tracking-screen">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span data-i18n="nav_log">Log</span>
+                </div>
+                <div class="nav-item" data-target="insights-screen">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span data-i18n="nav_insights">Insights</span>
+                </div>
+                <div class="nav-item" data-target="assistant-screen">
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span data-i18n="nav_assistant">AI</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- CALENDAR SCREEN -->
+        <div id="calendar-screen" class="screen">
+            <header class="calendar-header">
+                <h2 data-i18n="calendar_title">Calendar</h2>
+                <div class="calendar-nav">
+                    <button class="calendar-nav-btn" id="prev-month">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <span class="month-year" id="calendar-month-year">Month Year</span>
+                    <button class="calendar-nav-btn" id="next-month">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="calendar-container">
+                <div class="calendar-weekdays">
+                    <div data-i18n="day_sun">Sun</div>
+                    <div data-i18n="day_mon">Mon</div>
+                    <div data-i18n="day_tue">Tue</div>
+                    <div data-i18n="day_wed">Wed</div>
+                    <div data-i18n="day_thu">Thu</div>
+                    <div data-i18n="day_fri">Fri</div>
+                    <div data-i18n="day_sat">Sat</div>
+                </div>
+                <div class="calendar-days" id="calendar-days">
+                </div>
+            </div>
+
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <span class="legend-color period"></span>
+                    <span data-i18n="legend_period">Period</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color ovulation"></span>
+                    <span data-i18n="legend_ovulation">Ovulation</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color fertile"></span>
+                    <span data-i18n="legend_fertile">Fertile</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color today"></span>
+                    <span data-i18n="legend_today">Today</span>
+                </div>
+            </div>
+
+            <nav class="bottom-nav">
+                <div class="nav-item" data-target="dashboard-screen">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-i18n="nav_home">Home</span>
+                </div>
+                <div class="nav-item active" data-target="calendar-screen">
+                    <i class="fa-solid fa-calendar"></i>
+                    <span data-i18n="nav_calendar">Calendar</span>
+                </div>
+                <div class="nav-item" data-target="tracking-screen">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span data-i18n="nav_log">Log</span>
+                </div>
+                <div class="nav-item" data-target="insights-screen">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span data-i18n="nav_insights">Insights</span>
+                </div>
+                <div class="nav-item" data-target="assistant-screen">
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span data-i18n="nav_assistant">AI</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- TRACKING SCREEN -->
+        <div id="tracking-screen" class="screen">
+            <header>
+                <h2 data-i18n="tracking_title">Log Symptoms</h2>
+                <p data-i18n="tracking_subtitle">Track how you're feeling today</p>
+            </header>
+
+            <div class="tracking-categories">
+                <div class="tracking-category active" data-category="flow" onclick="selectCategory('flow')"
+                    data-i18n="cat_flow">Flow</div>
+                <div class="tracking-category" data-category="mood" onclick="selectCategory('mood')"
+                    data-i18n="cat_mood">Mood</div>
+                <div class="tracking-category" data-category="symptoms" onclick="selectCategory('symptoms')"
+                    data-i18n="cat_symptoms">Symptoms</div>
+                <div class="tracking-category" data-category="energy" onclick="selectCategory('energy')"
+                    data-i18n="cat_energy">Energy</div>
+            </div>
+
+            <!-- Flow Options -->
+            <div class="tracking-options" id="flow-options">
+                <div class="tracking-option" data-value="none" onclick="selectFlow('none')">
+                    <i class="fa-solid fa-minus"></i>
+                    <span data-i18n="flow_none">None</span>
+                </div>
+                <div class="tracking-option" data-value="light" onclick="selectFlow('light')">
+                    <i class="fa-solid fa-droplet"></i>
+                    <span data-i18n="flow_light">Light</span>
+                </div>
+                <div class="tracking-option" data-value="medium" onclick="selectFlow('medium')">
+                    <i class="fa-solid fa-droplet"></i>
+                    <span data-i18n="flow_medium">Medium</span>
+                </div>
+                <div class="tracking-option" data-value="heavy" onclick="selectFlow('heavy')">
+                    <i class="fa-solid fa-droplet"></i>
+                    <span data-i18n="flow_heavy">Heavy</span>
+                </div>
+                <div class="tracking-option" data-value="spotting" onclick="selectFlow('spotting')">
+                    <i class="fa-solid fa-droplet"></i>
+                    <span data-i18n="flow_spotting">Spotting</span>
+                </div>
+            </div>
+
+            <!-- Mood Options -->
+            <div class="tracking-options hidden" id="mood-options">
+                <div class="tracking-option" data-value="happy" onclick="selectMood('happy')">
+                    <i class="fa-solid fa-face-smile-beam"></i>
+                    <span data-i18n="mood_happy">Happy</span>
+                </div>
+                <div class="tracking-option" data-value="calm" onclick="selectMood('calm')">
+                    <i class="fa-solid fa-face-meh"></i>
+                    <span data-i18n="mood_calm">Calm</span>
+                </div>
+                <div class="tracking-option" data-value="sad" onclick="selectMood('sad')">
+                    <i class="fa-solid fa-face-sad-tear"></i>
+                    <span data-i18n="mood_sad">Sad</span>
+                </div>
+                <div class="tracking-option" data-value="anxious" onclick="selectMood('anxious')">
+                    <i class="fa-solid fa-face-frown-open"></i>
+                    <span data-i18n="mood_anxious">Anxious</span>
+                </div>
+                <div class="tracking-option" data-value="irritable" onclick="selectMood('irritable')">
+                    <i class="fa-solid fa-face-angry"></i>
+                    <span data-i18n="mood_irritable">Irritable</span>
+                </div>
+                <div class="tracking-option" data-value="energetic" onclick="selectMood('energetic')">
+                    <i class="fa-solid fa-face-laugh-squint"></i>
+                    <span data-i18n="mood_energetic">Energetic</span>
+                </div>
+            </div>
+
+            <!-- Symptoms Options -->
+            <div class="tracking-options hidden" id="symptoms-options">
+                <div class="tracking-option" data-value="cramps" onclick="toggleSymptom('cramps')">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span data-i18n="sym_cramps">Cramps</span>
+                </div>
+                <div class="tracking-option" data-value="headache" onclick="toggleSymptom('headache')">
+                    <i class="fa-solid fa-head-side-virus"></i>
+                    <span data-i18n="sym_headache">Headache</span>
+                </div>
+                <div class="tracking-option" data-value="bloating" onclick="toggleSymptom('bloating')">
+                    <i class="fa-solid fa-burst"></i>
+                    <span data-i18n="sym_bloating">Bloating</span>
+                </div>
+                <div class="tracking-option" data-value="fatigue" onclick="toggleSymptom('fatigue')">
+                    <i class="fa-solid fa-battery-quarter"></i>
+                    <span data-i18n="sym_fatigue">Fatigue</span>
+                </div>
+                <div class="tracking-option" data-value="backache" onclick="toggleSymptom('backache')">
+                    <i class="fa-solid fa-person-walking"></i>
+                    <span data-i18n="sym_backache">Backache</span>
+                </div>
+                <div class="tracking-option" data-value="breast_tenderness"
+                    onclick="toggleSymptom('breast_tenderness')">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                    <span data-i18n="sym_breast_tenderness">Tender</span>
+                </div>
+                <div class="tracking-option" data-value="acne" onclick="toggleSymptom('acne')">
+                    <i class="fa-solid fa-face-dizzy"></i>
+                    <span data-i18n="sym_acne">Acne</span>
+                </div>
+                <div class="tracking-option" data-value="cravings" onclick="toggleSymptom('cravings')">
+                    <i class="fa-solid fa-cookie"></i>
+                    <span data-i18n="sym_cravings">Cravings</span>
+                </div>
+                <div class="tracking-option" data-value="nausea" onclick="toggleSymptom('nausea')">
+                    <i class="fa-solid fa-face-frown"></i>
+                    <span data-i18n="sym_nausea">Nausea</span>
+                </div>
+            </div>
+
+            <!-- Energy Options -->
+            <div class="tracking-options hidden" id="energy-options">
+                <div class="tracking-option" data-value="low" onclick="selectEnergy('low')">
+                    <i class="fa-solid fa-battery-empty"></i>
+                    <span data-i18n="energy_low">Low</span>
+                </div>
+                <div class="tracking-option" data-value="medium" onclick="selectEnergy('medium')">
+                    <i class="fa-solid fa-battery-half"></i>
+                    <span data-i18n="energy_medium">Medium</span>
+                </div>
+                <div class="tracking-option" data-value="high" onclick="selectEnergy('high')">
+                    <i class="fa-solid fa-battery-full"></i>
+                    <span data-i18n="energy_high">High</span>
+                </div>
+            </div>
+
+            <button class="primary-btn" onclick="saveTracking()" data-i18n="btn_save_tracking">Save Today's Log</button>
+
+            <nav class="bottom-nav">
+                <div class="nav-item" data-target="dashboard-screen">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-i18n="nav_home">Home</span>
+                </div>
+                <div class="nav-item" data-target="calendar-screen">
+                    <i class="fa-solid fa-calendar"></i>
+                    <span data-i18n="nav_calendar">Calendar</span>
+                </div>
+                <div class="nav-item active" data-target="tracking-screen">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span data-i18n="nav_log">Log</span>
+                </div>
+                <div class="nav-item" data-target="insights-screen">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span data-i18n="nav_insights">Insights</span>
+                </div>
+                <div class="nav-item" data-target="assistant-screen">
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span data-i18n="nav_assistant">AI</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- INSIGHTS SCREEN -->
+        <div id="insights-screen" class="screen">
+            <header class="insights-header">
+                <h2 class="insights-title" data-i18n="insights_title">Your Insights</h2>
+                <p class="insights-subtitle" data-i18n="insights_subtitle">Track your cycle patterns over time</p>
+            </header>
+
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-value" id="avg-cycle-length">28</div>
+                    <div class="stat-label" data-i18n="avg_cycle">Avg Cycle (days)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avg-period-length">5</div>
+                    <div class="stat-label" data-i18n="avg_period">Avg Period (days)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-cycles">0</div>
+                    <div class="stat-label" data-i18n="total_cycles">Cycles Tracked</div>
+                </div>
+                <div class="stat-card highlight">
+                    <div class="stat-value" id="prediction-accuracy">--</div>
+                    <div class="stat-label" data-i18n="prediction_accuracy">Prediction Accuracy</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title" data-i18n="mood_chart_title">Mood Distribution</h3>
+                <div class="bar-chart" id="mood-chart">
+                    <!-- Bars will be generated by JS -->
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title" data-i18n="symptoms_chart_title">Common Symptoms</h3>
+                <div class="bar-chart" id="symptoms-chart">
+                    <!-- Bars will be generated by JS -->
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 data-i18n="cycle_history_title">Cycle History</h3>
+                <div class="history-list" id="cycle-history-list">
+                    <!-- Items will be generated by JS -->
+                </div>
+            </div>
+
+            <nav class="bottom-nav">
+                <div class="nav-item" data-target="dashboard-screen">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-i18n="nav_home">Home</span>
+                </div>
+                <div class="nav-item" data-target="calendar-screen">
+                    <i class="fa-solid fa-calendar"></i>
+                    <span data-i18n="nav_calendar">Calendar</span>
+                </div>
+                <div class="nav-item" data-target="tracking-screen">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span data-i18n="nav_log">Log</span>
+                </div>
+                <div class="nav-item active" data-target="insights-screen">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span data-i18n="nav_insights">Insights</span>
+                </div>
+                <div class="nav-item" data-target="assistant-screen">
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span data-i18n="nav_assistant">AI</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- ASSISTANT SCREEN -->
+        <div id="assistant-screen" class="screen">
+            <header class="assistant-header">
+                <div class="assistant-avatar">
+                    <span class="zyra-logo" aria-hidden="true">
+                        <span class="zyra-line zyra-line-top"></span>
+                        <span class="zyra-line zyra-line-mid"></span>
+                        <span class="zyra-line zyra-line-bottom"></span>
+                        <span class="zyra-core-dot"></span>
+                    </span>
+                </div>
+                <h2 class="assistant-name" data-i18n="assistant_title">Zyra</h2>
+                <p class="assistant-subtitle">Your cycle AI companion</p>
+                <div class="assistant-disclaimer" data-i18n="assistant_disclaimer"></div>
+
+            </header>
+
+            <div class="chat-container" id="chat-container">
+                <div class="chat-bubble assistant welcome-bubble" data-i18n="assistant_welcome">
+                    Hello, I'm Zyra, your menstrual health assistant. Ask me about periods, PMS, cramps, mood changes,
+                    or cycle timing.
+                </div>
+            </div>
+
+            <div class="quick-questions">
+                <div class="q-chip" onclick="askQuickQuestion('When is my next period?')" data-i18n="q_period">When is
+                    my next period?</div>
+                <div class="q-chip" onclick="askQuickQuestion('What phase am I in?')" data-i18n="q_phase">What phase am
+                    I in?</div>
+                <div class="q-chip" onclick="askQuickQuestion('Tips for cramps?')" data-i18n="q_cramps">Tips for cramps?
+                </div>
+                <div class="q-chip" onclick="askQuickQuestion('Fertile window?')" data-i18n="q_fertile">Fertile window?
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Ask anything about your cycle..."
+                    data-i18n-placeholder="ask_placeholder">
+                <button id="send-btn" onclick="sendMessage()" aria-label="Send message">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+
+            <nav class="bottom-nav">
+                <div class="nav-item" data-target="dashboard-screen">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-i18n="nav_home">Home</span>
+                </div>
+                <div class="nav-item" data-target="calendar-screen">
+                    <i class="fa-solid fa-calendar"></i>
+                    <span data-i18n="nav_calendar">Calendar</span>
+                </div>
+                <div class="nav-item" data-target="tracking-screen">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span data-i18n="nav_log">Log</span>
+                </div>
+                <div class="nav-item" data-target="insights-screen">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span data-i18n="nav_insights">Insights</span>
+                </div>
+                <div class="nav-item active" data-target="assistant-screen">
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span data-i18n="nav_assistant">AI</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- SETTINGS SCREEN -->
+        <div id="settings-screen" class="screen">
+            <header class="settings-header">
+                <h2 data-i18n="settings_title">Settings</h2>
+                <button class="icon-btn" onclick="switchScreen('dashboard-screen')" aria-label="Close settings">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </header>
+
+            <div class="settings-section">
+                <h3><i class="fa-solid fa-palette"></i> <span data-i18n="settings_theme">Theme</span></h3>
+                <div class="theme-grid">
+                    <div class="theme-option active" data-theme="pink" onclick="setTheme('pink')">
+                        <div class="theme-preview pink"></div>
+                        <span class="theme-name" data-i18n="theme_pink">Pink</span>
+                    </div>
+                    <div class="theme-option" data-theme="lavender" onclick="setTheme('lavender')">
+                        <div class="theme-preview lavender"></div>
+                        <span class="theme-name" data-i18n="theme_lavender">Purple</span>
+                    </div>
+                    <div class="theme-option" data-theme="dark" onclick="setTheme('dark')">
+                        <div class="theme-preview dark"></div>
+                        <span class="theme-name" data-i18n="theme_dark">Dark</span>
+                    </div>
+                    <div class="theme-option" data-theme="white" onclick="setTheme('white')">
+                        <div class="theme-preview white"></div>
+                        <span class="theme-name" data-i18n="theme_white">Blue</span>
+                    </div>
+                    <div class="theme-option" data-theme="pastel" onclick="setTheme('pastel')">
+                        <div class="theme-preview pastel"></div>
+                        <span class="theme-name" data-i18n="theme_pastel">Mint</span>
+                    </div>
+                    <div class="theme-option" data-theme="festival" onclick="setTheme('festival')">
+                        <div class="theme-preview festival"></div>
+                        <span class="theme-name" data-i18n="theme_festival">Peach</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3><i class="fa-solid fa-language"></i> <span data-i18n="settings_language">Language</span></h3>
+                <div class="language-options">
+                    <div class="language-option active" data-lang="en" onclick="setLanguage('en')">
+                        <div class="language-icon">EN</div>
+                        <div>
+                            <div class="lang-name">English</div>
+                            <div class="lang-code">English</div>
+                        </div>
+                    </div>
+                    <div class="language-option" data-lang="hi" onclick="setLanguage('hi')">
+                        <div class="language-icon">HI</div>
+                        <div>
+                            <div class="lang-name">Hindi</div>
+                            <div class="lang-code">Hindi</div>
+                        </div>
+                    </div>
+                    <div class="language-option" data-lang="bn" onclick="setLanguage('bn')">
+                        <div class="language-icon">BN</div>
+                        <div>
+                            <div class="lang-name">Bengali</div>
+                            <div class="lang-code">Bengali</div>
+                        </div>
+                    </div>
+                    <div class="language-option" data-lang="ta" onclick="setLanguage('ta')">
+                        <div class="language-icon">TA</div>
+                        <div>
+                            <div class="lang-name">Tamil</div>
+                            <div class="lang-code">Tamil</div>
+                        </div>
+                    </div>
+                    <div class="language-option" data-lang="te" onclick="setLanguage('te')">
+                        <div class="language-icon">TE</div>
+                        <div>
+                            <div class="lang-name">Telugu</div>
+                            <div class="lang-code">Telugu</div>
+                        </div>
+                    </div>
+                    <div class="language-option" data-lang="mr" onclick="setLanguage('mr')">
+                        <div class="language-icon">MR</div>
+                        <div>
+                            <div class="lang-name">Marathi</div>
+                            <div class="lang-code">Marathi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3><i class="fa-solid fa-sliders"></i> <span data-i18n="settings_cycle">Cycle Settings</span></h3>
+                <div class="input-group">
+                    <label data-i18n="settings_cycle_length">Average Cycle Length</label>
+                    <input type="number" id="setting-cycle-length" min="20" max="45" value="28" step="1" required>
+                </div>
+                <div class="input-group">
+                    <label data-i18n="settings_period_length">Average Period Length</label>
+                    <input type="number" id="setting-period-length" min="2" max="10" value="5" step="1" required>
+                </div>
+                <button class="primary-btn" onclick="saveSettings()" data-i18n="btn_save">Save Changes</button>
+            </div>
+
+            <div class="settings-section danger-zone">
+                <h3><i class="fa-solid fa-triangle-exclamation"></i> <span data-i18n="settings_privacy">Privacy &
+                        Data</span></h3>
+                <p data-i18n="settings_privacy_desc">All your data is stored locally on this device. You can clear it at
+                    any time.</p>
+                <button class="danger-btn" onclick="clearAllData()" data-i18n="btn_clear_data">Clear All Data</button>
+                <div class="settings-credits" data-i18n="settings_credits">
+                    This app has been created by a 14-year-old student currently studying in Class 8. If you'd like to
+                    share feedback, report an issue, or suggest a new feature, feel free to reach out to me on Instagram
+                    at @samm.senpai.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Main Application -->
+    <script src="app.js"></script>
+</body>
+
+</html>
+
+

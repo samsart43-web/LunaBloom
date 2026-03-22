@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+*.log
+.gemini/
+/tmp/
+.env
+# If you want to build native folders locally, keep them. 
+# But for Appflow, they are often needed.
